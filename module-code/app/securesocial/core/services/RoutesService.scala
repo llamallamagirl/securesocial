@@ -117,7 +117,8 @@ object RoutesService {
 
     override def loginPageUrl(implicit req: RequestHeader): String = {
       //absoluteUrl(securesocial.controllers.routes.LoginPage.login())
-      "/#/login"
+      // HACK!!
+      "https://narrate-client.herokuapp.com/#/login"
     }
 
     override def accessDeniedUrl(implicit req: RequestHeader): String = {
