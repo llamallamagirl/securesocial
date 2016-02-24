@@ -146,12 +146,12 @@ object RoutesService {
     }
 
     override def handleStartResetPasswordUrl(implicit req: RequestHeader): String = {
-    	securesocial.controllers.routes.PasswordReset.handleStartResetPassword().toString()
+      securesocial.controllers.routes.PasswordReset.handleStartResetPassword().toString()
     }
 
     override def resetPasswordUrl(mailToken: String)(implicit req: RequestHeader): String = {
       //absoluteUrl(securesocial.controllers.routes.PasswordReset.resetPassword(mailToken))
-      "https://narrate-client.herokuapp.com/#/reset/" + mailToken
+      "https://narrate-client.herokuapp.com/reset/" + mailToken
     }
 
     override def handleResetPasswordUrl(mailToken: String)(implicit req: RequestHeader): String = {
