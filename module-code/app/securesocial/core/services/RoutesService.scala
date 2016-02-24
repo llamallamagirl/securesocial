@@ -144,7 +144,7 @@ object RoutesService {
     }
 
     override def handleStartResetPasswordUrl(implicit req: RequestHeader): String = {
-    	securesocial.controllers.routes.PasswordReset.handleStartResetPassword()
+    	securesocial.controllers.routes.PasswordReset.handleStartResetPassword().toString()
     }
 
     override def resetPasswordUrl(mailToken: String)(implicit req: RequestHeader): String = {
