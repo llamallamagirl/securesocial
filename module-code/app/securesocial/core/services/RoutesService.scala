@@ -144,7 +144,9 @@ object RoutesService {
     }
 
     override def handleStartResetPasswordUrl(implicit req: RequestHeader): String = {
-    	securesocial.controllers.routes.PasswordReset.handleStartResetPassword()
+	logger.error("got HERE");
+    	//securesocial.controllers.routes.PasswordReset.handleStartResetPassword()
+        "http://google.com"
     }
 
     override def resetPasswordUrl(mailToken: String)(implicit req: RequestHeader): String = {
