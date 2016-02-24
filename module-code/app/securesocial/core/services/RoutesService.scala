@@ -116,7 +116,8 @@ object RoutesService {
     }
 
     override def loginPageUrl(implicit req: RequestHeader): String = {
-      absoluteUrl(securesocial.controllers.routes.LoginPage.login())
+      //absoluteUrl(securesocial.controllers.routes.LoginPage.login())
+      "/#/login"
     }
 
     override def accessDeniedUrl(implicit req: RequestHeader): String = {
