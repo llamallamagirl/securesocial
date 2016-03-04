@@ -118,7 +118,7 @@ object RoutesService {
     override def loginPageUrl(implicit req: RequestHeader): String = {
       //absoluteUrl(securesocial.controllers.routes.LoginPage.login())
       // HACK!!
-      "https://narrate-client.herokuapp.com/#/login"
+      "https://app.narrate.life/#/login"
     }
 
     override def accessDeniedUrl(implicit req: RequestHeader): String = {
@@ -151,12 +151,12 @@ object RoutesService {
 
     override def resetPasswordUrl(mailToken: String)(implicit req: RequestHeader): String = {
       //absoluteUrl(securesocial.controllers.routes.PasswordReset.resetPassword(mailToken))
-      "https://narrate-client.herokuapp.com/reset/" + mailToken
+      "https://app.narrate.life/reset/" + mailToken
     }
 
     override def handleResetPasswordUrl(mailToken: String)(implicit req: RequestHeader): String = {
       //absoluteUrl(securesocial.controllers.routes.PasswordReset.handleResetPassword(mailToken))
-      "https://narrate-client.herokuapp.com/reset/" + mailToken
+      "https://app.narrate.life/reset/" + mailToken
     }
 
     override def passwordChangeUrl(implicit req: RequestHeader): String = {
