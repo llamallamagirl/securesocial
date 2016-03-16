@@ -114,8 +114,6 @@ class HttpHeaderAuthenticatorBuilder[U](store: AuthenticatorStore[HttpHeaderAuth
         val now = DateTime.now()
         val expirationDate = now.plusMinutes(HttpHeaderAuthenticator.absoluteTimeout)
         val authenticator = HttpHeaderAuthenticator(id, user, expirationDate, now, now, store)
-println("HERE!")
-println(authenticator)
         store.save(authenticator, HttpHeaderAuthenticator.absoluteTimeoutInSeconds)
     }
   }
