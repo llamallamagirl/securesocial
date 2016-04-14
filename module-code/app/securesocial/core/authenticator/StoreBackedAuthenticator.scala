@@ -68,13 +68,11 @@ trait StoreBackedAuthenticator[U, T <: Authenticator[U]] extends Authenticator[U
    *
    * @return a future with the updated authenticator
    */
-  override def touch: Future[T] = {
-    //narrate-KL: too many db touches, considering we are not 
-    //using idle timeout
-    //val updated = withLastUsedTime(DateTime.now())
-    //logger.debug(s"touched: lastUsed = $lastUsed")
-    //store.save(updated, absoluteTimeoutInSeconds)
-  }
+  /* override def touch: Future[T] = {
+    val updated = withLastUsedTime(DateTime.now())
+    logger.debug(s"touched: lastUsed = $lastUsed")
+    store.save(updated, absoluteTimeoutInSeconds)
+  } */
 
   /**
    * Updates the user information associated with this authenticator
