@@ -26,9 +26,11 @@ import scala.concurrent.Future
 /**
  * A Facebook Provider
  */
-class FacebookProvider(routesService: RoutesService,
+class FacebookProvider(
+  routesService: RoutesService,
   cacheService: CacheService,
-  client: OAuth2Client)
+  client: OAuth2Client
+)
     extends OAuth2Provider(routesService, client, cacheService) {
   val MeApi = "https://graph.facebook.com/me?fields=name,first_name,last_name,picture.type(large),email&return_ssl_resources=1&access_token="
   val Error = "error"
@@ -46,17 +48,6 @@ class FacebookProvider(routesService: RoutesService,
   val Url = "url"
 
   override val id = FacebookProvider.Facebook
-
-  // facebook does not follow the OAuth2 spec :-\
-  override protected def buildInfo(response: WSResponse): OAuth2Info = {
-    response.body.split("&|=") match {
-      case Array(AccessToken, token, Expires, expiresIn) => OAuth2Info(token, None, Some(expiresIn.toInt))
-      case Array(AccessToken, token) => OAuth2Info(token)
-      case _ =>
-        logger.error("[securesocial] invalid response format for accessToken")
-        throw new AuthenticationException()
-    }
-  }
 
   def fillProfile(info: OAuth2Info): Future[BasicProfile] = {
     val accessToken = info.accessToken
