@@ -62,6 +62,8 @@ case class HttpHeaderAuthenticator[U](id: String, user: U, expirationDate: DateT
    */
   def withUser(user: U): HttpHeaderAuthenticator[U] = this.copy[U](user = user)
 
+  def touch: Authenticator[U]
+
   /**
    * Starts an authenticated session by returning a json with the authenticator id
    *
