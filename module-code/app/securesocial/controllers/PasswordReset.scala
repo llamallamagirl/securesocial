@@ -29,6 +29,7 @@ import securesocial.core.providers.utils.PasswordValidator
 import securesocial.core.services.SaveMode
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import play.api.Play
 
 import scala.concurrent.Future
 
@@ -88,7 +89,8 @@ trait BasePasswordReset extends MailTokenBasedOperations {
                   case None =>
                     env.mailer.sendUnkownEmailNotice(email)
                 }
-                handleStartResult().flashing(Success -> Messages(BaseRegistration.ThankYouCheckEmail))
+                // handleStartResult().flashing(Success -> Messages(BaseRegistration.ThankYouCheckEmail))
+                Redirect(Play.configuration.getString("securesocial.onStartResetPasswordGoTo").getOrElse(env.routes.loginPageUrl))
             }
           }
         )
