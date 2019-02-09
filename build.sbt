@@ -11,6 +11,8 @@ lazy val scalaDemo = project.in( file("samples/scala/demo") ).enablePlugins(Play
 
 lazy val javaDemo = project.in( file("samples/java/demo") ).enablePlugins(PlayJava).dependsOn(core)
 
+libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.8.1"
+
 lazy val root = project.in( file(".") ).aggregate(core, scalaDemo, javaDemo) .settings(
      aggregate in update := false
    )
