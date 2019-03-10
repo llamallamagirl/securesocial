@@ -78,6 +78,7 @@ abstract class OAuth2Provider(
 
   protected def getAccessToken[A](code: String)(implicit request: Request[A]): Future[OAuth2Info] = {
     val callbackUrl = routesService.authenticationUrl(id)
+    logger.error(s"[securesocial] did not get accessToken from $callbackUrl")
     client.exchangeCodeForToken(code, callbackUrl, buildInfo)
       .recoverWith {
         case e =>
