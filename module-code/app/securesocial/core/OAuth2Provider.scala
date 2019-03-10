@@ -186,31 +186,35 @@ abstract class OAuth2Provider(
   val malformedJson = Json.obj("error" -> "Malformed json").toString()
 
   def authenticateForApi(implicit request: Request[AnyContent]): Future[AuthenticationResult] = {
-    val maybeCredentials = request.body.asJson flatMap {
-      _.validate[LoginJson] match {
-        case ok: JsSuccess[LoginJson] =>
-          Some(ok.get)
-        case error: JsError =>
-          val e = JsError.toJson(error).toString()
-          logger.error(s"[securesocial] error parsing json: $e")
-          None
-      }
-    }
-
-    maybeCredentials.map { credentials =>
-      fillProfile(credentials.info).map { profile =>
-        if (profile.email.isDefined && profile.email.get == credentials.email.toLowerCase) {
-          AuthenticationResult.Authenticated(profile)
-        } else {
-          AuthenticationResult.Failed("wrong credentials")
+    request.queryString.get(OAuth2Constants.Code).flatMap(_.headOption) match {
+      case Some(code) =>
+        authenticateCallback(request, code)
+      case None =>
+        val maybeCredentials = request.body.asJson flatMap {
+          _.validate[LoginJson] match {
+            case ok: JsSuccess[LoginJson] =>
+              Some(ok.get)
+            case error: JsError =>
+              val e = JsError.toJson(error).toString()
+              logger.error(s"[securesocial] error parsing json: $e")
+              None
+          }
         }
-      } recoverWith {
-        case e: Throwable =>
-          logger.error(s"[securesocial] error authenticating user via api", e)
-          Future.failed(e)
-      }
-    } getOrElse {
-      Future.successful(AuthenticationResult.Failed(malformedJson))
+        maybeCredentials.map { credentials =>
+          fillProfile(credentials.info).map { profile =>
+            if (profile.email.isDefined && profile.email.get == credentials.email.toLowerCase) {
+              AuthenticationResult.Authenticated(profile)
+            } else {
+              AuthenticationResult.Failed("wrong credentials")
+            }
+          } recoverWith {
+            case e: Throwable =>
+              logger.error(s"[securesocial] error authenticating user via api", e)
+              Future.failed(e)
+          }
+        } getOrElse {
+          Future.successful(AuthenticationResult.Failed(malformedJson))
+        }
     }
   }
 }
