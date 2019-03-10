@@ -188,7 +188,13 @@ abstract class OAuth2Provider(
   def authenticateForApi(implicit request: Request[AnyContent]): Future[AuthenticationResult] = {
     request.queryString.get(OAuth2Constants.Code).flatMap(_.headOption) match {
       case Some(code) =>
-        authenticateCallback(request, code)
+        for {
+          accessToken <- getAccessToken(code)(request);
+          user <- fillProfile(OAuth2Info(accessToken.accessToken, accessToken.tokenType, accessToken.expiresIn, accessToken.refreshToken))
+        } yield {
+          logger.debug(s"[securesocial] user loggedin using provider $id = $user")
+          AuthenticationResult.Authenticated(user)
+        }
       case None =>
         val maybeCredentials = request.body.asJson flatMap {
           _.validate[LoginJson] match {
