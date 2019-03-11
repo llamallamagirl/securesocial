@@ -52,8 +52,8 @@ object OAuth2Client {
         OAuth2Constants.ClientId -> Seq(settings.clientId),
         OAuth2Constants.ClientSecret -> Seq(settings.clientSecret),
         OAuth2Constants.GrantType -> Seq(OAuth2Constants.AuthorizationCode),
-        OAuth2Constants.Code -> Seq(code),
-        OAuth2Constants.RedirectUri -> Seq(callBackUrl)) ++ settings.accessTokenUrlParams.mapValues(Seq(_))
+        OAuth2Constants.Code -> Seq(code)) ++ settings.accessTokenUrlParams.mapValues(Seq(_))
+        // OAuth2Constants.RedirectUri -> Seq(callBackUrl)) ++ settings.accessTokenUrlParams.mapValues(Seq(_))
       httpService.url(settings.accessTokenUrl).post(params).map(builder)
     }
 
@@ -77,8 +77,8 @@ abstract class OAuth2Provider(
   def authMethod = AuthenticationMethod.OAuth2
 
   protected def getAccessToken[A](code: String)(implicit request: Request[A]): Future[OAuth2Info] = {
-    val callbackUrl = routesService.authenticationUrl(id)
-    client.exchangeCodeForToken(code, callbackUrl, buildInfo)
+    // val callbackUrl = routesService.authenticationUrl(id)
+    client.exchangeCodeForToken(code, null, buildInfo)
       .recoverWith {
         case e =>
           logger.error("[securesocial] error trying to get an access token for provider %s".format(id), e)
@@ -189,10 +189,10 @@ abstract class OAuth2Provider(
     request.queryString.get(OAuth2Constants.Code).flatMap(_.headOption) match {
       case Some(code) =>
         for {
-          accessToken <- getAccessToken(code)(request);
+          accessToken <- getAccessToken(code)(request)
           user <- fillProfile(OAuth2Info(accessToken.accessToken, accessToken.tokenType, accessToken.expiresIn, accessToken.refreshToken))
         } yield {
-          logger.debug(s"[securesocial] user loggedin using provider $id = $user")
+          logger.info(s"[securesocial] user loggedin using provider $id = $user")
           AuthenticationResult.Authenticated(user)
         }
       case None =>
